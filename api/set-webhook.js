@@ -4,7 +4,7 @@ const config = require('../lib/config');
 // Set webhook endpoint
 module.exports = async (req, res) => {
   try {
-    const webhookUrl = `${process.env.VERCEL_URL || 'https://your-bot.vercel.app'}/api/webhook`;
+    const webhookUrl = `${process.env.VERCEL_URL || 'https://dimzbot-git-main-dimasahmudiats-projects.vercel.app'}/api/webhook`;
     
     const response = await axios.post(
       `https://api.telegram.org/bot${config.BOT_TOKEN}/setWebhook`,
