@@ -8,16 +8,33 @@ function log(message) {
   console.log(`[${new Date().toISOString()}] ${message}`);
 }
 
-// Main webhook handler
+// Main webhook handler - FIXED for Vercel
 module.exports = async (req, res) => {
+  // Set CORS headers
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  // Handle OPTIONS preflight
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   // Only accept POST requests
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return res.status(200).json({ ok: true, message: 'Webhook endpoint ready' });
   }
 
   try {
     const update = req.body;
-    log(`Received update: ${JSON.stringify(update)}`);
+    
+    // Validate update object
+    if (!update || typeof update !== 'object') {
+      log('Invalid update received');
+      return res.status(200).json({ ok: true });
+    }
+
+    log(`Received update: ${JSON.stringify(update).substring(0, 200)}`);
 
     // Process cleanup
     await db.cleanupExpiredOrders();
@@ -32,10 +49,13 @@ module.exports = async (req, res) => {
       await handleCallbackQuery(update.callback_query);
     }
 
-    res.status(200).json({ ok: true });
+    // Always return 200 OK to Telegram
+    return res.status(200).json({ ok: true });
   } catch (error) {
     log(`Error processing update: ${error.message}`);
-    res.status(500).json({ error: 'Internal server error' });
+    log(`Error stack: ${error.stack}`);
+    // Still return 200 to prevent Telegram from retrying
+    return res.status(200).json({ ok: true, error: error.message });
   }
 };
 
