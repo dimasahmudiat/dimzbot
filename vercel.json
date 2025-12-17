@@ -1,0 +1,34 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/**/*.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/webhook",
+      "dest": "/api/webhook.js"
+    },
+    {
+      "src": "/api/set-webhook",
+      "dest": "/api/set-webhook.js"
+    },
+    {
+      "src": "/api/check-payments",
+      "dest": "/api/check-payments.js"
+    }
+  ],
+  "env": {
+    "BOT_TOKEN": "8506485993:AAHj4Rbis59F6N4Ap4GPGUwiN-8ugfpYgNw",
+    "DB_HOST": "localhost",
+    "DB_USER": "dimc6971_Dimas1120",
+    "DB_PASSWORD": "dimasahm12",
+    "DB_NAME": "dimc6971_Dimas_db",
+    "API_KEY": "AjnQBMAhSZ4kJhqp",
+    "MERCHANT_CODE": "DIMZ1945",
+    "ADMIN_CHAT_ID": "6201552432",
+    "WELCOME_IMAGE": "https://dimzmods.my.id/demobot/img/contoh1.jpg"
+  }
+}
